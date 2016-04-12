@@ -1,0 +1,54 @@
+/*body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}*/
+
+/* SQ Payment Form */
+.sq-input {
+  border: 1px solid rgb(223, 223, 223);
+  outline-offset: -2px;
+  margin-bottom: 5px;
+}
+.sq-input--focus {
+  /* how your inputs should appear when they have focus */
+  outline: 5px auto rgb(59, 153, 252);
+}
+.sq-input--error {
+  /* how your inputs should appear when invalid */
+  outline: 5px auto rgb(255, 97, 97);
+}
+
+.show-grid [class^=col-] {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.show-grid {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.cards.row {
+  border-bottom: 1px solid #eee;
+}
+
+.payment-form {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 30px;
+  border: 1px solid #eee;
+  background: #eee;
+}
+
+.add-card-success {
+  padding: 10px;
+  margin: 10px;
+  width: 100%;
+  background: #98FB98
+}
+
+

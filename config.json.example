@@ -1,0 +1,11 @@
+# change app id in angularApp.js (new payment form method)
+{
+  "development": {
+    "squareApplicationId": "",
+    "squareAccessToken": ""
+  },
+  "production": {
+    "squareApplicationId": "",
+    "squareAccessToken": ""
+  }
+}
