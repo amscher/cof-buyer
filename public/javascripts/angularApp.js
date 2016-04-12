@@ -100,7 +100,7 @@ app.controller('MainCtrl', [
           placeholder: 'MM/YY'
         },
         postalCode: {
-          elementId: 'sq-postal-code'
+          elementId: 'sq-postal-code',
           placeholder: '94110'
         },
         callbacks: {
