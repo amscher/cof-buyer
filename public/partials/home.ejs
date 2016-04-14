@@ -1,19 +1,43 @@
     <!-- <script type="text/ng-template" id="/home.html"> -->
       <div class="page-header row">
-        <h1>Chez Momo</h1>
+        <h1>Wise Sons</h1>
       </div>
 
-      <div class="row">
-        <form ng-submit="customersByEmail()" class="input-group">
-          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" ng-model="email">
-          <span class="input-group-btn">
-            <button type="submit" class="btn btn-default">Find</button>
-          </span>
-        </form>
+      <div class="row find-customer-block">
+        <div class="col-sm-6">
+          <form ng-submit="customersByEmail()"  ng-class="{'has-warning': show_add_customer}">
+            <label class="control-label">Find your customer profile:</label>
+            <div class="input-group">
+              <input type="email" ng-focus="" class="form-control" id="exampleInputEmail1" placeholder="Email" ng-model="email">
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-default">Search</button>
+              </span>
+            </div>
+            <span id="helpBlock2" ng-show="show_add_customer" class="help-block">
+              There are no profiles with that email address... 
+            </span>
+          </form>
+        </div>
+        <div class="col-sm-6 content-right" ng-show="show_add_customer">
+          <form ng-submit="addCustomer()" >
+            <label class="control-label">Add your customer profile:</label>
+            <div class="form-group">
+              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" ng-model="email">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="First Name" ng-model="first_name">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Last Name" ng-model="last_name">
+            </div>
+            <button type="submit" class="btn btn-primary">Add customer profile</button>
+          </form>
+        </div>
       </div>
 
-      <div class="row show-grid">
-        <div class="col-md-4" ng-repeat="customer in filtered_customers" ng-click="toggleCustomer(customer)">
+      <div class="row show-grid" ng-show="filtered_customers.length>0">
+        <p class="helper-text">Select your customer profile...</p>
+        <div class="col-sm-4" ng-repeat="customer in filtered_customers" ng-click="toggleCustomer(customer)">
             <button ng-class="{'active': selected_customer.id == customer.id}" type="button" class="btn btn-default btn-lg btn-block">
               {{customer.given_name}} {{customer.family_name}}
             </button>
@@ -22,11 +46,11 @@
 
       <div ng-show="selected_customer" class="row show-grid cards">
         <h4> Cards on File: </h4>
-        <div ng-repeat="card in selected_customer.cards" class="col-md-2 text-center">
+        <div ng-repeat="card in selected_customer.cards" class="col-xs-2 text-center">
           <img class="img-responsive" alt="Responsive image" ng-src="{{card_icons[card.card_brand]}}">
           <button type="button" class="btn btn-danger btn-xs" ng-click="removeCard($index)">Remove</button>
         </div>
-        <div class="col-md-2 text-center">
+        <div class="col-xs-2 text-center">
          <img class="img-responsive" alt="Responsive image" ng-src="../images/New_card.png">
          <button type="button" class="btn btn-default btn-xs" ng-click="togglePaymentForm()">Add Card</button>
         </div>

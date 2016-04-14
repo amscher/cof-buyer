@@ -38,6 +38,17 @@ app.factory('customers', ['$http', function($http){
     });
   }
 
+  o.addCustomer = function(email, first_name, last_name) {
+    return $http.post('/customers', {
+      "email_address": email,
+      "given_name": first_name,
+      "family_name": last_name
+    })
+    .success(function(data) {
+      console.log(data);
+    });;
+  }
+
   o.addCard = function(customer, nonce) {
     return $http.post('/customers/' + customer.id + '/cards', {
       "customer": customer,
@@ -71,6 +82,7 @@ app.controller('MainCtrl', [
     $scope.paymentForm = null;
     $scope.show_payment_form = false;
     $scope.add_card_success = false;
+    $scope.show_add_customer = false;
     $scope.card_icons = {
       "AMERICAN_EXPRESS" : "../images/Amex.png",
       "VISA" : "../images/Visa.png",
@@ -78,9 +90,19 @@ app.controller('MainCtrl', [
       "DISCOVER" : "../images/Discover.png",
     };
 
+    var resetFields = function(){
+      $scope.filtered_customers = [];
+      $scope.selected_customer = null;
+      $scope.paymentCardNonce = null;
+      $scope.paymentForm = null;
+      $scope.show_payment_form = false;
+      $scope.add_card_success = false;
+      $scope.show_add_customer = false;
+    }
+
     var newPaymentForm = function() {
       return new SqPaymentForm({
-        applicationId: 'sq0idp-0H4tmUZMLoKHfWYfWcFc2g', // <-- REQUIRED: Add Application ID
+        applicationId: 'sq0idp-xbQIz_OU5yqnYiiYrcL9xQ', // <-- REQUIRED: Add Application ID
         inputClass: 'form-control',
         inputStyles: [
           {
@@ -126,13 +148,33 @@ app.controller('MainCtrl', [
     };
 
     $scope.customersByEmail = function() {
-      console.log($scope.customers);
+      // console.log($scope.customers);
+      resetFields();
       for(var i in $scope.customers) {
         var customer = $scope.customers[i];
-        console.log(customer);
+        // console.log(customer);
         if(customer.email_address == $scope.email) $scope.filtered_customers.push(customer);
       }
-      $scope.email = '';
+      if ($scope.filtered_customers.length == 0) {
+        $scope.show_add_customer = true;
+      } else {
+        $scope.email = '';
+      }
+    }
+
+    $scope.addCustomer = function() {
+      resetFields();
+      customers.addCustomer($scope.email, $scope.first_name, $scope.last_name)
+        .success(function() {
+          console.log($scope.email);  
+          $scope.show_add_customer = false;
+          customers.getAll().
+            success(function() {
+              $scope.customersByEmail($scope.email);
+            });
+          $scope.first_name = '';
+          $scope.last_name = '';
+        });
     }
 
     $scope.togglePaymentForm = function() {
@@ -165,11 +207,11 @@ app.controller('MainCtrl', [
     }
 
 
-      $scope.requestCardNonce = function() {
-        $scope.paymentForm.requestCardNonce();
-      }
+    $scope.requestCardNonce = function() {
+      $scope.paymentForm.requestCardNonce();
+    }
 
-    }]);
+  }]);
 
 /* Auth factory */
 // app.factory('auth', ['$http', '$window', function($http, $window) {

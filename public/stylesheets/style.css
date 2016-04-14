@@ -51,4 +51,19 @@ a {
   background: #98FB98
 }
 
+.content-right {
+  border-left: 1px solid #eee;
+}
 
+.find-customer-block {
+  padding-bottom: 40px;
+  border-bottom: 1px solid #eee;
+}
+
+h5 {
+  text-align: center;
+}
+
+.helper-text {
+  font-style: italic;
+}

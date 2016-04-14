@@ -13,6 +13,11 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'CoF' , 'square_application_id': config.squareApplicationId });
 });
 
+/* SQ Merchant Name. */
+// router.get('/', function(req, res, next) {
+//   res.json();
+// });
+
 /* SQ CUSTOMERS API CALLS */
 router.get('/customers', function(req, res, next) {
 
@@ -23,7 +28,7 @@ router.get('/customers', function(req, res, next) {
   })
   .end(function (response) {
     var customers = response.body.customers;
-    console.log(customers);
+    // console.log(customers);
     res.json(customers);
   });
 });
@@ -43,7 +48,28 @@ router.get('/customers/:customer', function(req, res, next) {
   });
 });
 
-/* Add card to customer */
+
+/* SQ Add customer */
+router.post('/customers', function(req, res, next) {
+  var request_body = req.body;
+
+  unirest.post(base_url + '/customers')
+    .headers({
+      'Authorization': 'Bearer ' + config.squareAccessToken,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    })
+    .send(request_body)
+    .end(function(response){
+      if (response.body.errors){
+        res.json({status: 400, errors: response.body.errors})
+      }else{
+        res.json({status: 200, card:response.body})
+      }
+    });
+});
+
+/* SQ Add card to customer */
 router.post('/customers/:customer/cards', function(req, res, next) {
   var request_params = req.body;
 
