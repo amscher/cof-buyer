@@ -64,7 +64,7 @@ router.post('/customers', function(req, res, next) {
       if (response.body.errors){
         res.json({status: 400, errors: response.body.errors})
       }else{
-        res.json({status: 200, card:response.body})
+        res.json({status: 200, customer:response.body.customer})
       }
     });
 });

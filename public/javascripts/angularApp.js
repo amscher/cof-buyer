@@ -16,6 +16,17 @@ function($stateProvider, $urlRouterProvider) {
         }]
       }
     })
+    .state('customers', {
+      url: '/customers/{id}',
+      templateUrl: '../partials/customers.ejs',
+      controller: 'CustomerCtrl',
+      resolve: {
+        customer: ['$stateParams', 'customers', function($stateParams, customers) {
+          return customers.get($stateParams.id);
+        }]
+      }
+    })
+
   $urlRouterProvider.otherwise('home');
 }]);
 
@@ -38,14 +49,22 @@ app.factory('customers', ['$http', function($http){
     });
   }
 
-  o.addCustomer = function(email, first_name, last_name) {
+  o.get = function(id) {
+    return $http.get('/customers/' + id).then(function(res) {
+      console.log(res.data);
+      return res.data;
+    });
+  }
+
+  o.post = function(email, first_name, last_name) {
     return $http.post('/customers', {
       "email_address": email,
       "given_name": first_name,
       "family_name": last_name
     })
-    .success(function(data) {
-      console.log(data);
+    .then(function(res) {
+      console.log(res.data.customer);
+      return res.data.customer;
     });;
   }
 
@@ -73,11 +92,58 @@ app.factory('customers', ['$http', function($http){
 /* Main app controller */
 app.controller('MainCtrl', [
   '$scope',
+  '$window',
   'customers',
-  function($scope, customers) {
+  function($scope, $window, customers) {
     $scope.customers = customers.customers;
     $scope.filtered_customers = [];
-    $scope.selected_customer = null;
+    $scope.show_add_customer = false;
+
+    var resetFields = function(){
+      $scope.filtered_customers = [];
+      $scope.add_card_success = false;
+      $scope.show_add_customer = false;
+    }
+
+    $scope.customersByEmail = function() {
+      resetFields();
+      var customerArr = [];
+      for(var i in $scope.customers) {
+        var customer = $scope.customers[i];
+        if(customer.email_address == $scope.email) {
+          customerArr.push(customer);
+        }
+      }
+      if (customerArr.length == 0) {
+        $scope.show_add_customer = true;
+      } else if (customerArr.length == 1) {
+        $window.location.assign('#/customers/' + customerArr[0].id);
+        return;
+      }
+      $scope.filtered_customers = customerArr;
+      $scope.email = '';
+    }
+
+    $scope.addCustomer = function() {
+      resetFields();
+      customers.post($scope.email, $scope.first_name, $scope.last_name)
+        .then(function(customer) {
+          $window.location.assign('#/customers/' + customer.id);
+        });
+    }
+
+  }]);
+
+
+
+/* Customer app controller */
+app.controller('CustomerCtrl', [
+  '$scope',
+  'customers',
+  'customer',
+  function($scope, customers, customer) {
+    $scope.customer = customer;
+
     $scope.paymentCardNonce = null;
     $scope.paymentForm = null;
     $scope.show_payment_form = false;
@@ -91,8 +157,6 @@ app.controller('MainCtrl', [
     };
 
     var resetFields = function(){
-      $scope.filtered_customers = [];
-      $scope.selected_customer = null;
       $scope.paymentCardNonce = null;
       $scope.paymentForm = null;
       $scope.show_payment_form = false;
@@ -102,7 +166,7 @@ app.controller('MainCtrl', [
 
     var newPaymentForm = function() {
       return new SqPaymentForm({
-        applicationId: 'sq0idp-xbQIz_OU5yqnYiiYrcL9xQ', // <-- REQUIRED: Add Application ID
+        applicationId: 'sq0idp-0H4tmUZMLoKHfWYfWcFc2g', // <-- REQUIRED: Add Application ID
         inputClass: 'form-control',
         inputStyles: [
           {
@@ -146,36 +210,6 @@ app.controller('MainCtrl', [
         }
       });
     };
-
-    $scope.customersByEmail = function() {
-      // console.log($scope.customers);
-      resetFields();
-      for(var i in $scope.customers) {
-        var customer = $scope.customers[i];
-        // console.log(customer);
-        if(customer.email_address == $scope.email) $scope.filtered_customers.push(customer);
-      }
-      if ($scope.filtered_customers.length == 0) {
-        $scope.show_add_customer = true;
-      } else {
-        $scope.email = '';
-      }
-    }
-
-    $scope.addCustomer = function() {
-      resetFields();
-      customers.addCustomer($scope.email, $scope.first_name, $scope.last_name)
-        .success(function() {
-          console.log($scope.email);  
-          $scope.show_add_customer = false;
-          customers.getAll().
-            success(function() {
-              $scope.customersByEmail($scope.email);
-            });
-          $scope.first_name = '';
-          $scope.last_name = '';
-        });
-    }
 
     $scope.togglePaymentForm = function() {
       if ($scope.show_payment_form) {
