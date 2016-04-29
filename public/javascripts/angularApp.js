@@ -51,7 +51,7 @@ app.factory('customers', ['$http', function($http){
 
   o.get = function(id) {
     return $http.get('/customers/' + id).then(function(res) {
-      console.log(res.data);
+      // console.log(res.data);
       return res.data;
     });
   }
@@ -63,7 +63,7 @@ app.factory('customers', ['$http', function($http){
       "family_name": last_name
     })
     .then(function(res) {
-      console.log(res.data.customer);
+      // console.log(res.data.customer);
       return res.data.customer;
     });;
   }
@@ -197,11 +197,11 @@ app.controller('CustomerCtrl', [
             } else {
               // handle nonce
               $scope.paymentCardNonce = nonce;
-              customers.addCard($scope.selected_customer, nonce);
+              customers.addCard($scope.customer, nonce);
               $scope.togglePaymentForm();
               $scope.add_card_success = true;
               console.log('Nonce received:');
-              console.log(nonce);
+              // console.log(nonce);
             }
           },
           unsupportedBrowserDetected: function() {
@@ -224,13 +224,13 @@ app.controller('CustomerCtrl', [
       }
     }
 
-    $scope.toggleCustomer = function(customer) {
-      if ($scope.selected_customer != customer) {
-        $scope.selected_customer = customer;
-      } else {
-        $scope.selected_customer = null;
-      }
-    }
+    // $scope.toggleCustomer = function(customer) {
+    //   if ($scope.selected_customer != customer) {
+    //     $scope.selected_customer = customer;
+    //   } else {
+    //     $scope.selected_customer = null;
+    //   }
+    // }
 
     $scope.removeCard = function(index) {
       var card = $scope.selected_customer.cards[index];
