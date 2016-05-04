@@ -2,7 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 var app = express();
-var config = require('.././config.json')[app.get('env')];
+var config = {
+  "squareApplicationId": "sq0idp-xbQIz_OU5yqnYiiYrcL9xQ",
+  "squareAccessToken": "sq0atp-PnnRVfzNHYPNwxd0UU1Jhg"
+}
+
+//require('.././config.json')[app.get('env')];
 
 var unirest = require('unirest');
 var base_url = "https://connect.squareup.com/v2";
