@@ -233,10 +233,10 @@ app.controller('CustomerCtrl', [
     // }
 
     $scope.removeCard = function(index) {
-      var card = $scope.selected_customer.cards[index];
-      customers.deleteCard($scope.selected_customer, card)
+      var card = $scope.customer.cards[index];
+      customers.deleteCard($scope.customer, card)
         .success(function(index) {
-          $scope.selected_customer.cards.splice(index, 1);
+          $scope.customer.cards.splice(index, 1);
         });
     }
 

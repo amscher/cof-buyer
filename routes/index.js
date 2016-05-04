@@ -28,7 +28,7 @@ router.get('/customers', function(req, res, next) {
   })
   .end(function (response) {
     var customers = response.body.customers;
-    // console.log(customers);
+    console.log(response.body);
     res.json(customers);
   });
 });
