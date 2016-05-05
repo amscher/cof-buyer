@@ -2,12 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var app = express();
-var config = {
-  "squareApplicationId": "sq0idp-xbQIz_OU5yqnYiiYrcL9xQ",
-  "squareAccessToken": "sq0atp-PnnRVfzNHYPNwxd0UU1Jhg"
-}
-
-//require('.././config.json')[app.get('env')];
+var config = require('.././config.json')[app.get('env')];
 
 var unirest = require('unirest');
 var base_url = "https://connect.squareup.com/v2";
@@ -33,7 +28,7 @@ router.get('/customers', function(req, res, next) {
   })
   .end(function (response) {
     var customers = response.body.customers;
-    console.log(response.body);
+    // console.log(response.body);
     res.json(customers);
   });
 });
@@ -48,7 +43,7 @@ router.get('/customers/:customer', function(req, res, next) {
   })
   .end(function (response) {
     var customer = response.body.customer;
-    console.log(customer);
+    // console.log(customer);
     res.json(customer);
   });
 });

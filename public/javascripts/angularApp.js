@@ -81,7 +81,7 @@ app.factory('customers', ['$http', function($http){
   o.deleteCard = function(customer, card) {
     return $http.delete('/customers/' + customer.id + '/cards/' + card.id)
     .success(function(data) {
-      console.log(data);
+      // console.log(data);
     });;
   }
 
