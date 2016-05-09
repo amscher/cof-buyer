@@ -1,10 +1,17 @@
 <div class="row">
+    <button type="submit" ng-click="logout()" class="btn btn-default btn-logout">Log out</button>
+</div>
+<div class="row">
   <div class="col-md-8">
     <h1>{{customer.given_name}} {{customer.family_name}}</h1>
     <!-- <h5>email</h5> -->
     <p>{{customer.email_address}}</p>
   </div>
 </div>
+
+
+<!-- <a ui-sref="main" sp-logout if-user>Logout</a> -->
+
 
 <div class="row-header">
   <h4> Cards on File: </h4>

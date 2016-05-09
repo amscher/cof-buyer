@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var stormpath = require('express-stormpath');
 
 var app = express();
 var config = require('.././config.json')[app.get('env')];
@@ -18,19 +19,70 @@ router.get('/', function(req, res, next) {
 //   res.json();
 // });
 
+var listCustomers = function() {
+  return unirest.get(base_url + '/customers')
+    .headers({
+      'Authorization': 'Bearer ' + config.squareAccessToken,
+      'Accept': 'application/json',
+    })
+}
+
+var customerByEmail = function(query, res) {
+  var email = query.email;
+  listCustomers().end(function (response) {
+    var customers = response.body.customers;
+    var customer = response.body.cursor;
+    var customer =  null;
+    for(var i in customers) {
+      customer = customers[i];
+      if(customer.email_address == email) {
+        res.json(customer);
+        return;
+      }
+    }
+      
+    if (response.body.cursor) {
+      customerByEmail(email);
+    } else {
+      // Create a new customer
+      var request_body = {
+        "email_address": email,
+        "given_name": query.givenName,
+        "family_name": query.familyName
+      }
+      
+      unirest.post(base_url + '/customers')
+        .headers({
+          'Authorization': 'Bearer ' + config.squareAccessToken,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        })
+        .send(request_body)
+        .end(function(response){
+          if (response.body.errors){
+            res.json({status: 400, errors: response.body.errors})
+          }else{
+            res.json({customer:response.body.customer})
+          }
+        });
+      return;
+    }
+  });
+}
+
 /* SQ CUSTOMERS API CALLS */
 router.get('/customers', function(req, res, next) {
+  if (req.query.email) {
+    console.log(req.query.email);
+    customerByEmail(req.query, res);
+  } else {
+    listCustomers().end(function (response) {
+      var customers = response.body.customers;
+      // console.log(response.body);
+      res.json(customers);
+    });
+  }
 
-  unirest.get(base_url + '/customers')
-  .headers({
-    'Authorization': 'Bearer ' + config.squareAccessToken,
-    'Accept': 'application/json',
-  })
-  .end(function (response) {
-    var customers = response.body.customers;
-    // console.log(response.body);
-    res.json(customers);
-  });
 });
 
 /* SQ CUSTOMERS API CALLS */
