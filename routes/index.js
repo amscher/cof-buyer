@@ -3,7 +3,11 @@ var router = express.Router();
 var stormpath = require('express-stormpath');
 
 var app = express();
-var config = require('.././config.json')[app.get('env')];
+// var config = require('.././config.json')[app.get('env')];
+var config = {
+  "squareApplicationId": process.env.SQ_APP_ID,
+  "squareAccessToken": process.env.SQ_ACCESS_TOK
+}
 
 var unirest = require('unirest');
 var base_url = "https://connect.squareup.com/v2";
@@ -50,7 +54,7 @@ var customerByEmail = function(query, res) {
         "given_name": query.givenName,
         "family_name": query.familyName
       }
-      
+
       unirest.post(base_url + '/customers')
         .headers({
           'Authorization': 'Bearer ' + config.squareAccessToken,
