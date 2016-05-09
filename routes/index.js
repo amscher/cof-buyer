@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var stormpath = require('express-stormpath');
 
 var app = express();
 // var config = require('.././config.json')[app.get('env')];
